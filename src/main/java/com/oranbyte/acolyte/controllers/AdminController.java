@@ -1,10 +1,10 @@
-package {{packageName}};
+package com.oranbyte.Acolyte.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/{{endpoint}}")
-public class {{className}} {
+@RequestMapping("/admin")
+public class AdminController {
 
 }

@@ -28,42 +28,42 @@ public class MakeControllerCommand implements Runnable {
             className += "Controller";
         }
 
-        // Get the base package name from the root context
+        // Get base package name
         String basePackage = root.getContext().getBasePackage();
         String controllerPackage = basePackage + ".controllers";
         String packagePath = controllerPackage.replace('.', '/');
 
-        // Define template path and replacement values
-        String templatePath = "src/main/resources/templates/controller.template"; // Path to your template file
+        // Template file path (inside the jar)
+        String templatePath = "templates/controller.template";
 
+        // Replace map
         Map<String, String> replacements = new HashMap<>();
         replacements.put("packageName", controllerPackage);
-        replacements.put("endpoint", className.toLowerCase().replace("controller", ""));  // Optionally, create endpoint as lowercase
+        replacements.put("endpoint", className.toLowerCase().replace("controller", ""));
         replacements.put("className", className);
 
-        // Load the template and replace the placeholders
+        // Load and apply template
         String content = TemplateUtils.loadTemplate(templatePath, replacements);
 
         if (content != null) {
-            // Define file path
             String filePath = AppConstants.PROJECT_DIRECTORY + "/src/main/java/" + packagePath + "/" + className + ".java";
             File file = new File(filePath);
 
             try {
                 file.getParentFile().mkdirs();
                 if (file.createNewFile()) {
-                    FileWriter writer = new FileWriter(file);
-                    writer.write(content);
-                    writer.close();
-                    System.out.println("Controller created at: " + filePath);
+                    try (FileWriter writer = new FileWriter(file)) {
+                        writer.write(content);
+                    }
+                    System.out.println("✅ Controller created at: " + filePath);
                 } else {
-                    System.out.println("File already exists: " + filePath);
+                    System.out.println("⚠️ File already exists: " + filePath);
                 }
             } catch (IOException e) {
-                System.err.println("Error creating controller: " + e.getMessage());
+                System.err.println("❌ Error creating controller: " + e.getMessage());
             }
         } else {
-            System.err.println("Error loading template or performing replacements.");
+            System.err.println("❌ Error loading template or performing replacements.");
         }
     }
 }
