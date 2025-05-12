@@ -3,6 +3,7 @@ package com.oranbyte.acolyte.utils;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -27,4 +28,12 @@ public class TemplateUtils {
             return null;
         }
     }
+
+    public static String indent(String code, int spaces) {
+        String indent = " ".repeat(spaces);
+        return Arrays.stream(code.split("\n"))
+                .map(line -> indent + line)
+                .collect(Collectors.joining("\n"));
+    }
+
 }

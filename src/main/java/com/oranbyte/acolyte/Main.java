@@ -7,6 +7,9 @@ import picocli.CommandLine.Command;
 public class Main {
 
     public static void main(String[] args) {
-        new CommandLine(new AcolyteCommandRoot()).execute(args);
+//        new CommandLine(new AcolyteCommandRoot()).execute(args);
+
+        // testing...
+        new CommandLine(new AcolyteCommandRoot()).execute("make:view", "sanke_case");
     }
 }

@@ -1,13 +1,21 @@
 package com.oranbyte.acolyte;
 
 import com.oranbyte.acolyte.commands.MakeControllerCommand;
+import com.oranbyte.acolyte.commands.MakeEntityCommand;
+import com.oranbyte.acolyte.commands.MakeServiceCommand;
+import com.oranbyte.acolyte.commands.MakeViewCommand;
 import com.oranbyte.acolyte.constants.AcolyteContext;
 import com.oranbyte.acolyte.utils.ProjectMetadataUtil;
 import picocli.CommandLine;
 
 @CommandLine.Command(
     name = "acolyte",
-    subcommands = {MakeControllerCommand.class} // add others here
+    subcommands = {
+            MakeControllerCommand.class,
+            MakeServiceCommand.class,
+            MakeEntityCommand.class,
+            MakeViewCommand.class,
+    }
 )
 public class AcolyteCommandRoot implements Runnable {
     private AcolyteContext context;

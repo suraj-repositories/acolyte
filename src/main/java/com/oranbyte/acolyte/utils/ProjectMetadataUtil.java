@@ -14,10 +14,12 @@ public class ProjectMetadataUtil {
             String groupId = doc.getElementsByTagName("groupId").item(0).getTextContent();
             String artifactId = doc.getElementsByTagName("artifactId").item(0).getTextContent();
 
-            return groupId + "." + artifactId;
+            String packageName = groupId + "." + artifactId;
+
+            return packageName.toLowerCase();
         } catch (Exception e) {
             System.err.println("Failed to read base package from pom.xml: " + e.getMessage());
-            return "com.example.demo"; // fallback
+            return "com.example.demo";
         }
     }
 }
