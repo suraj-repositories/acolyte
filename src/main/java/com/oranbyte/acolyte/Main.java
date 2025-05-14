@@ -10,6 +10,6 @@ public class Main {
 //        new CommandLine(new AcolyteCommandRoot()).execute(args);
 
         // testing...
-        new CommandLine(new AcolyteCommandRoot()).execute("make:view", "sanke_case");
+        new CommandLine(new AcolyteCommandRoot()).execute("make:configuration", "sanke_sdf-case");
     }
 }

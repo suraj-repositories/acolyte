@@ -2,6 +2,7 @@ package com.oranbyte.acolyte.commands;
 
 import com.oranbyte.acolyte.AcolyteCommandRoot;
 import com.oranbyte.acolyte.constants.AppConstants;
+import com.oranbyte.acolyte.utils.CaseConverter;
 import com.oranbyte.acolyte.utils.ConsolePrinter;
 import com.oranbyte.acolyte.utils.TemplateUtils;
 import picocli.CommandLine;
@@ -23,7 +24,7 @@ public class MakeServiceCommand implements Runnable{
 
     @Override
     public void run() {
-        String interfaceName = serviceName.replaceAll("[^a-zA-Z0-9]", "");
+        String interfaceName = CaseConverter.toPascalCase(serviceName.replaceAll("[^a-zA-Z0-9_-]", ""));
         if(interfaceName.endsWith("Service")){
             interfaceName += "Service";
         }

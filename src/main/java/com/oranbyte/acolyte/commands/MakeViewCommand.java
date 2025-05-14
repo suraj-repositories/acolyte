@@ -1,6 +1,5 @@
 package com.oranbyte.acolyte.commands;
 
-
 import com.oranbyte.acolyte.AcolyteCommandRoot;
 import com.oranbyte.acolyte.constants.AppConstants;
 import com.oranbyte.acolyte.utils.ConsolePrinter;
@@ -65,6 +64,17 @@ public class MakeViewCommand implements Runnable{
         String result = input.replaceAll("_", "-");
         result = result.replaceAll("(?<!^)([A-Z])", "-$1");
         return result.toLowerCase();
+    }
+
+    public static String toKebabCase(String input) {
+        if (input == null || input.isEmpty()) return input;
+
+        String normalized = input.replaceAll("_", "-");
+
+        normalized = normalized.replaceAll("([a-z])([A-Z])", "$1-$2");
+        normalized = normalized.replaceAll("([A-Z])([A-Z][a-z])", "$1-$2");
+
+        return normalized.toLowerCase();
     }
 
 

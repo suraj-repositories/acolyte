@@ -2,6 +2,7 @@ package com.oranbyte.acolyte.commands;
 
 import com.oranbyte.acolyte.AcolyteCommandRoot;
 import com.oranbyte.acolyte.constants.AppConstants;
+import com.oranbyte.acolyte.utils.CaseConverter;
 import com.oranbyte.acolyte.utils.ConsolePrinter;
 import com.oranbyte.acolyte.utils.TemplateUtils;
 import picocli.CommandLine;
@@ -29,7 +30,7 @@ public class MakeControllerCommand implements Runnable {
 
     @Override
     public void run() {
-        String className = controllerName.replaceAll("[^a-zA-Z0-9]", "");
+        String className = CaseConverter.toPascalCase(controllerName.replaceAll("[^a-zA-Z0-9_-]", ""));
         if (!className.endsWith("Controller")) {
             className += "Controller";
         }

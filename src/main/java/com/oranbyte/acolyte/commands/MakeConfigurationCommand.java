@@ -13,30 +13,31 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@CommandLine.Command(name = "make:entity", description = "Create a simple entity class")
-public class MakeEntityCommand implements Runnable{
+@CommandLine.Command(name = "make:configuration", description = "Create a simple configuration class")
+public class MakeConfigurationCommand implements Runnable{
 
     @CommandLine.ParentCommand
     private AcolyteCommandRoot root;
 
-    @CommandLine.Parameters(index = "0", description = "Name of the entity")
-    private String entityName;
+    @CommandLine.Parameters(index = "0", description = "Name of the configuration class")
+    private String configName;
+
 
     @Override
     public void run() {
-        String className = CaseConverter.toPascalCase(entityName.replaceAll("[^a-zA-Z0-9_-]", ""));
-        if(className.endsWith("Entity") && !className.equals("Entity")){
-            className = className.substring(0, className.lastIndexOf("Entity"));
+        String className = CaseConverter.toPascalCase(configName.replaceAll("[^a-zA-Z0-9_-]", ""));
+
+        if (!className.endsWith("Configuration")) {
+            className += "Configuration";
         }
 
         String basePackage = root.getContext().getBasePackage();
-        String entityPackage = basePackage + ".entity";
-        String packagePath = entityPackage.replace('.', '/');
+        String configPackage = basePackage + ".configuration";
+        String packagePath = configPackage.replace('.', '/');
 
-        String templatePath = "templates/entity.template";
-
+        String templatePath = "templates/configuration.template";
         Map<String, String> replacements = new HashMap<>();
-        replacements.put("packageName", entityPackage);
+        replacements.put("packageName", configPackage);
         replacements.put("className", className);
 
         String content = TemplateUtils.loadTemplate(templatePath, replacements);
@@ -47,17 +48,19 @@ public class MakeEntityCommand implements Runnable{
 
             try{
                 file.getParentFile().mkdirs();
+
                 if(file.exists()){
                     ConsolePrinter.error("File already exists: " + filePath);
                 }else{
                     try(FileWriter writer = new FileWriter(file)){
                         writer.write(content);
                     }
-                    ConsolePrinter.println("Entity created at: " + filePath);
+                    ConsolePrinter.println("Configuration created at: " + filePath);
                 }
             }catch(IOException e){
-                ConsolePrinter.error("Error creating entity: " + e.getMessage());
+                ConsolePrinter.error("Error creating configuration: " + e.getMessage());
             }
+
         }else{
             ConsolePrinter.error("Error loading template or performing replacements.");
         }
