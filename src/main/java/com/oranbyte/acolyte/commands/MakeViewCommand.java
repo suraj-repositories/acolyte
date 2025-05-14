@@ -1,16 +1,9 @@
 package com.oranbyte.acolyte.commands;
 
 import com.oranbyte.acolyte.AcolyteCommandRoot;
-import com.oranbyte.acolyte.constants.AppConstants;
-import com.oranbyte.acolyte.utils.ConsolePrinter;
-import com.oranbyte.acolyte.utils.TemplateUtils;
+import com.oranbyte.acolyte.services.ViewGeneratorService;
+import com.oranbyte.acolyte.services.impl.ViewGeneratorServiceImpl;
 import picocli.CommandLine;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @CommandLine.Command(name = "make:view", description = "Create a simple view class")
 public class MakeViewCommand implements Runnable{
@@ -22,60 +15,11 @@ public class MakeViewCommand implements Runnable{
     @CommandLine.Parameters(index = "0", description = "Name of the view file")
     private String viewName;
 
+    private final ViewGeneratorService viewService = new ViewGeneratorServiceImpl();
+
     @Override
     public void run() {
-        String viewFileName = getThymeleafViewFileName(viewName);
-
-        String templatePath = "templates/view.template";
-
-        Map<String, String> replacements = new HashMap<>();
-        replacements.put("viewFileName", viewFileName);
-
-        String content = TemplateUtils.loadTemplate(templatePath, replacements);
-
-        if(content != null){
-            String filePath = AppConstants.PROJECT_DIRECTORY + "/src/main/resources/templates/" + viewFileName + ".html";
-            File file = new File(filePath);
-
-            try{
-                file.getParentFile().mkdirs();
-                if(file.exists()){
-                    ConsolePrinter.error("File already exists: " + filePath);
-                }else{
-                    try(FileWriter writer = new FileWriter(file)){
-                        writer.write(content);
-                    }
-                    ConsolePrinter.println("Entity created at: " + filePath);
-                }
-            }catch(IOException e){
-                ConsolePrinter.error("Error creating entity: " + e.getMessage());
-            }
-        }else{
-            ConsolePrinter.error("Error loading template or performing replacements.");
-        }
-
+        viewService.generateView(viewName);
     }
-
-    public static String getThymeleafViewFileName(String viewName) {
-        return toDashSeparated(viewName.replaceAll("[^a-zA-Z0-9_]", ""));
-    }
-
-    public static String toDashSeparated(String input) {
-        String result = input.replaceAll("_", "-");
-        result = result.replaceAll("(?<!^)([A-Z])", "-$1");
-        return result.toLowerCase();
-    }
-
-    public static String toKebabCase(String input) {
-        if (input == null || input.isEmpty()) return input;
-
-        String normalized = input.replaceAll("_", "-");
-
-        normalized = normalized.replaceAll("([a-z])([A-Z])", "$1-$2");
-        normalized = normalized.replaceAll("([A-Z])([A-Z][a-z])", "$1-$2");
-
-        return normalized.toLowerCase();
-    }
-
 
 }
