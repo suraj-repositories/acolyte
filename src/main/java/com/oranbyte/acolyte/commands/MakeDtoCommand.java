@@ -5,7 +5,7 @@ import com.oranbyte.acolyte.services.DtoGeneratorService;
 import com.oranbyte.acolyte.services.impl.DtoGeneratorServiceImpl;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "make:dto", description = "Create a simple dto or pojo class")
+@CommandLine.Command(name = "make:dto", description = "Create a simple dto or pojo class", aliases = {"make:pojo"})
 public class MakeDtoCommand implements Runnable {
 
     @CommandLine.ParentCommand
