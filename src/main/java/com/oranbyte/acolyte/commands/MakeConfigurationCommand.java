@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@CommandLine.Command(name = "make:configuration", description = "Create a simple configuration class")
+@CommandLine.Command(name = "make:configuration", description = "Create a simple configuration class", aliases = {"make:config"})
 public class MakeConfigurationCommand implements Runnable{
 
     @CommandLine.ParentCommand

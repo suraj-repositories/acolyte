@@ -10,6 +10,18 @@ public class Main {
 //        new CommandLine(new AcolyteCommandRoot()).execute(args);
 
         // testing...
-        new CommandLine(new AcolyteCommandRoot()).execute("make:configuration", "sanke_sdf-case");
+//        new CommandLine(new AcolyteCommandRoot()).execute("make:repository", "supersonic-suatomic_java", "--id=Long");
+
+        System.out.println(
+                """
+                    _  
+                   / \\     ______
+                  / _ \\   / ____/
+                 / ___ \\ / /___
+                /_/   \\_\\\\____/
+                            
+            """
+        );
+
     }
 }

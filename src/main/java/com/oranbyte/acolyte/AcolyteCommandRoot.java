@@ -14,6 +14,7 @@ import picocli.CommandLine;
             MakeViewCommand.class,
             MakeDtoCommand.class,
             MakeConfigurationCommand.class,
+            MakeRepositoryCommand.class,
     }
 )
 public class AcolyteCommandRoot implements Runnable {
