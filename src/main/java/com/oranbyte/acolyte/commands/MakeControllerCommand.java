@@ -1,6 +1,7 @@
 package com.oranbyte.acolyte.commands;
 
 import com.oranbyte.acolyte.AcolyteCommandRoot;
+import com.oranbyte.acolyte.constants.ConsoleColor;
 import com.oranbyte.acolyte.services.ControllerService;
 import com.oranbyte.acolyte.services.impl.ControllerServiceImpl;
 import picocli.CommandLine;
