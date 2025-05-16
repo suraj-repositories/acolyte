@@ -15,9 +15,8 @@ public class ControllerServiceImpl implements ControllerService {
 
     public void generateController(String controllerName, String basePackage, List<String> resourceFunctions) {
         String className = CaseConverter.toPascalCase(controllerName.replaceAll("[^a-zA-Z0-9_-]", ""));
-        if (!className.endsWith("Controller")) {
-            className += "Controller";
-        }
+        className = CaseConverter.appendIfNotAvailable(className, "Controller");
+
 
         String controllerPackage = basePackage + ".controller";
         String packagePath = controllerPackage.replace('.', '/');

@@ -43,4 +43,16 @@ public class CaseConverter {
         return normalized.toLowerCase();
     }
 
+    public static String appendIfNotAvailable(String source, String appendString) {
+        if (source == null || appendString == null) {
+            return source;
+        }
+        String trimmedSource = source.trim();
+        if (!trimmedSource.endsWith(appendString) && !trimmedSource.equals(appendString)) {
+            return source + appendString;
+        }
+        return source;
+    }
+
+
 }

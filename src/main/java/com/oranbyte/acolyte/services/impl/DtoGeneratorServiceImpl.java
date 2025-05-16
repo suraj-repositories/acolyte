@@ -17,10 +17,7 @@ public class DtoGeneratorServiceImpl implements DtoGeneratorService {
     @Override
     public void generateDto(String dtoName, String basePackage) {
         String className = CaseConverter.toPascalCase(dtoName.replaceAll("[^a-zA-Z0-9_-]", ""));
-
-        if (!className.endsWith("Dto")) {
-            className += "Dto";
-        }
+        className = CaseConverter.appendIfNotAvailable(className, "Dto");
 
         String dtoPackage = basePackage + ".dto";
         String packagePath = dtoPackage.replace('.', '/');

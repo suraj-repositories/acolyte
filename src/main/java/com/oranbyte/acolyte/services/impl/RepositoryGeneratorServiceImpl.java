@@ -17,13 +17,11 @@ public class RepositoryGeneratorServiceImpl implements RepositoryGeneratorServic
     @Override
     public void generateRepository(String inputName, String basePackage, String idType) {
 
-        String cleanName = CaseConverter.toPascalCase(inputName.replaceAll("[^a-zA-Z0-9_-]", ""));
-        String className = cleanName.endsWith("Repository")
-                        && !cleanName.equals("Repository")
-                        ? cleanName.substring(0, cleanName.lastIndexOf("Repository"))
-                        : cleanName;
+        String className = CaseConverter.toClassName(inputName.replaceAll("[^a-zA-Z0-9_-]", ""));
+        
+        String repositoryClassName = CaseConverter.appendIfNotAvailable(className, "Repository");
 
-        String repositoryClassName = className + "Repository";
+
         String repositoryPackage = basePackage + ".repository";
         String entityPackage = basePackage + ".entity";
         String packagePath = repositoryPackage.replace('.', '/');

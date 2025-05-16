@@ -1,6 +1,7 @@
 # Acolyte
 A command line tool for spring boot application, which make your effort a lot easier by writing boilerplate code for you and also maintain the standard spring package structure.
 <br/><br/>
+
 <p align="center">Under development...</p>
 <br/><br/>
 
@@ -60,10 +61,18 @@ acolyte make:repo UserRepository
 ```
 #### Make Configuration
 ```shell
-acolyte make:configuration <config-file-name>
+acolyte make:configuration <config-class-name>
 // OR
-acolyte make:config <config-file-name>
+acolyte make:config <config-class-name>
 ```
 ```shell
 acolyte make:config WebConfig
+```
+
+#### Make Validator
+```shell
+acolyte make:validator <validator-class-name> --dto=<dto-class-name>
+```
+```shell
+acolyte make:validator UserValidator --dto=UserDto
 ```

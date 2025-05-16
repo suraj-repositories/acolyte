@@ -23,6 +23,7 @@ import java.io.PrintWriter;
                 MakeDtoCommand.class,
                 MakeConfigurationCommand.class,
                 MakeRepositoryCommand.class,
+                MakeValidationCommand.class,
         }
 )
 public class AcolyteCommandRoot implements Runnable {

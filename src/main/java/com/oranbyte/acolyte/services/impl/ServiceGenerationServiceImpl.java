@@ -86,6 +86,6 @@ public class ServiceGenerationServiceImpl implements ServiceGenerationService {
 
     private String formatInterfaceName(String rawName) {
         String name = CaseConverter.toPascalCase(rawName.replaceAll("[^a-zA-Z0-9_-]", ""));
-        return name.endsWith("Service") ? name : name + "Service";
+        return CaseConverter.appendIfNotAvailable(name, "Service");
     }
 }

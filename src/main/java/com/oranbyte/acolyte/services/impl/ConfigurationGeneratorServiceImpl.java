@@ -16,10 +16,9 @@ public class ConfigurationGeneratorServiceImpl implements ConfigurationGenerator
 
     @Override
     public void generateConfiguration(String configName, String basePackage) {
-        String className = CaseConverter.toClassName(configName);
-        if (!className.endsWith("Configuration")) {
-            className += "Configuration";
-        }
+        String className = CaseConverter.appendIfNotAvailable(
+                CaseConverter.toClassName(configName)
+                , "Configuration");
 
         String configPackage = basePackage + ".configuration";
         String packagePath = configPackage.replace('.', '/');
