@@ -14,13 +14,12 @@ import java.util.Collections;
 public class Main {
 
     public static void main(String[] args) {
-       int exitCode = new CommandLine(new AcolyteCommandRoot()).execute(args);
+//       int exitCode = new CommandLine(new AcolyteCommandRoot()).execute(args);
 
         // testing...
 
-//        int exitCode = new CommandLine(new AcolyteCommandRoot()).execute("-v");
+        int exitCode = new CommandLine(new AcolyteCommandRoot()).execute();
 //        new CommandLine(new AcolyteCommandRoot()).execute("make:repository", "supersonic-suatomic_java", "--id=Long");
-
 
         System.exit(exitCode);
 

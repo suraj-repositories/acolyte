@@ -9,6 +9,9 @@ import com.oranbyte.acolyte.utils.TemplateUtils;
 import picocli.CommandLine;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class AcolyteRootServiceImpl implements AcolyteRootService {
 
@@ -43,14 +46,27 @@ public class AcolyteRootServiceImpl implements AcolyteRootService {
     @Override
     public void printCommandList() {
         CommandLine root = new CommandLine(new AcolyteCommandRoot());
+        String green = ConsoleColor.GREEN.code();
+        String reset = ConsoleColor.DEFAULT.code();
+
+        Set<CommandLine.Model.CommandSpec> printedSpecs = new HashSet<>();
 
         for (CommandLine sub : root.getSubcommands().values()) {
             CommandLine.Model.CommandSpec spec = sub.getCommandSpec();
-            String name = spec.name();
-            String desc = String.join(" ", spec.usageMessage().description());
-            System.out.printf("%s%-30s%s %s%n", ConsoleColor.GREEN.code(), name, ConsoleColor.DEFAULT.code(), desc);
+
+            if (printedSpecs.add(spec)) {
+                String mainName = spec.name();
+                List<String> aliases = List.of(spec.aliases());
+
+                String names = mainName + (aliases.isEmpty() ? "" : " (" + String.join(", ", aliases) + ")");
+                String desc = String.join(" ", spec.usageMessage().description());
+
+                System.out.printf("%s%-40s%s %s%n", green, names, reset, desc);
+            }
         }
     }
+
+
 
 
 
