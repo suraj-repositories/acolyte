@@ -83,7 +83,7 @@ acolyte make:listener <listener-class-name>
 ```
 ```shell
 acolyte make:listener UserListener
-```
+``` 
 ```java
 // use this on your class to apply 
 @EntityListeners(UserListener.class)
