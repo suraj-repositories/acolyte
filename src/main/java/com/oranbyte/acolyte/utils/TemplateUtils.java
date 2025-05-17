@@ -1,8 +1,8 @@
 package com.oranbyte.acolyte.utils;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.oranbyte.acolyte.constants.AppConstants;
+
+import java.io.*;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,6 +34,33 @@ public class TemplateUtils {
         return Arrays.stream(code.split("\n"))
                 .map(line -> indent + line)
                 .collect(Collectors.joining("\n"));
+    }
+
+    public static void createSourceFileFromTemplate(String templatePath, String fileName, String packagePath, Map<String, String> replacements) {
+        String content = TemplateUtils.loadTemplate(templatePath, replacements);
+        if (content == null) {
+            ConsolePrinter.error("Template not found or failed to load: " + templatePath);
+            return;
+        }
+
+        String dirPath = AppConstants.PROJECT_DIRECTORY + "/src/main/java/" + packagePath.replace(".", "/");
+        File outputFile = new File(dirPath, fileName);
+
+        try {
+            outputFile.getParentFile().mkdirs();
+            if (outputFile.exists()) {
+                ConsolePrinter.error("File already exists: " + outputFile.getPath());
+                return;
+            }
+
+            try (FileWriter writer = new FileWriter(outputFile)) {
+                writer.write(content);
+            }
+
+            ConsolePrinter.println("Created: " + outputFile.getPath());
+        } catch (IOException e) {
+            ConsolePrinter.error("Error writing file: " + e.getMessage());
+        }
     }
 
 }

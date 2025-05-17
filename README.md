@@ -76,3 +76,18 @@ acolyte make:validator <validator-class-name> --dto=<dto-class-name>
 ```shell
 acolyte make:validator UserValidator --dto=UserDto
 ```
+
+#### Make Listener
+```shell
+acolyte make:listener <listener-class-name>
+```
+```shell
+acolyte make:listener UserListener
+```
+```java
+// use this on your class to apply
+@EntityListeners(UserListener.class)
+public class User{
+    
+}
+```

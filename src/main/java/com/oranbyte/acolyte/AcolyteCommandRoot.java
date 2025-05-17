@@ -24,6 +24,7 @@ import java.io.PrintWriter;
                 MakeConfigurationCommand.class,
                 MakeRepositoryCommand.class,
                 MakeValidationCommand.class,
+                MakeListenerCommand.class,
         }
 )
 public class AcolyteCommandRoot implements Runnable {
@@ -39,6 +40,9 @@ public class AcolyteCommandRoot implements Runnable {
 
     public AcolyteContext getContext() {
         return context;
+    }
+    public void setContext(AcolyteContext context) {
+        this.context = context;
     }
 
     @Override

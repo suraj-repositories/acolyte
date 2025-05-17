@@ -39,8 +39,8 @@ public class ValidationGeneratorServiceImpl implements ValidationGeneratorServic
         replacements.put("dtoClass", dtoClass);
         replacements.put("dtoFullClassName", dtoFullClassName);
 
-        writeFile(ANNOTATION_TEMPLATE, annotationName + ".java", validatorPackage, replacements);
-        writeFile(VALIDATOR_TEMPLATE, validatorClassName + ".java", validatorPackage + ".impl", replacements);
+        TemplateUtils.createSourceFileFromTemplate(ANNOTATION_TEMPLATE, annotationName + ".java", validatorPackage, replacements);
+        TemplateUtils.createSourceFileFromTemplate(VALIDATOR_TEMPLATE, validatorClassName + ".java", validatorPackage + ".impl", replacements);
     }
 
     private String sanitizeValidatorBaseName(String name) {
@@ -76,30 +76,4 @@ public class ValidationGeneratorServiceImpl implements ValidationGeneratorServic
         }
     }
 
-    private void writeFile(String templatePath, String fileName, String packagePath, Map<String, String> replacements) {
-        String content = TemplateUtils.loadTemplate(templatePath, replacements);
-        if (content == null) {
-            ConsolePrinter.error("Template not found or failed to load: " + templatePath);
-            return;
-        }
-
-        String dirPath = AppConstants.PROJECT_DIRECTORY + "/src/main/java/" + packagePath.replace(".", "/");
-        File outputFile = new File(dirPath, fileName);
-
-        try {
-            outputFile.getParentFile().mkdirs();
-            if (outputFile.exists()) {
-                ConsolePrinter.error("File already exists: " + outputFile.getPath());
-                return;
-            }
-
-            try (FileWriter writer = new FileWriter(outputFile)) {
-                writer.write(content);
-            }
-
-            ConsolePrinter.println("Created: " + outputFile.getPath());
-        } catch (IOException e) {
-            ConsolePrinter.error("Error writing file: " + e.getMessage());
-        }
-    }
 }

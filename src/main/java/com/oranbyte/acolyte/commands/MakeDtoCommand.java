@@ -9,10 +9,10 @@ import picocli.CommandLine;
 public class MakeDtoCommand implements Runnable {
 
     @CommandLine.ParentCommand
-    private AcolyteCommandRoot root;
+    protected AcolyteCommandRoot root;
 
     @CommandLine.Parameters(index = "0", description = "Name of the dto class")
-    private String dtoName;
+    protected String dtoName;
 
     private final DtoGeneratorService generatorService = new DtoGeneratorServiceImpl();
 
