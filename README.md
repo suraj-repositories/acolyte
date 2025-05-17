@@ -2,8 +2,15 @@
 A command line tool for spring boot application, which make your effort a lot easier by writing boilerplate code for you and also maintain the standard spring package structure.
 <br/><br/>
 
-<p align="center">Under development...</p>
+<h3 align="center">🛠 <span style="color: orange">Under development...</span></h3>
 <br/><br/>
+
+<div style="display: flex;flex-direction: column; grid-gap: 10px;">
+   <div style="display: flex; grid-gap: 10px;">
+        <img src="screenshots/oranbyte1.png" alt="screenshots" width="100%" style="border: 2px solid lightgreen"/>
+    </div>
+</div>
+
 
 ## Commands
 
