@@ -2,6 +2,7 @@ package com.oranbyte.acolyte;
 
 import com.oranbyte.acolyte.services.ApplicationService;
 import com.oranbyte.acolyte.services.impl.ApplicationServiceImpl;
+import com.oranbyte.acolyte.utils.CaseConverter;
 import com.oranbyte.acolyte.utils.ConsolePrinter;
 import picocli.CommandLine;
 
@@ -15,7 +16,7 @@ public class Main {
 //       int exitCode = new CommandLine(new AcolyteCommandRoot()).execute(args);
 
 //        testing...
-//
+//        System.out.println(CaseConverter.toPascalCase("sElse"));
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter command : ");
         String command = sc.nextLine();

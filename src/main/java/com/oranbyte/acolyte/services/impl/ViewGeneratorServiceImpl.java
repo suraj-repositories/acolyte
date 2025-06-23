@@ -15,35 +15,56 @@ import java.util.Map;
 public class ViewGeneratorServiceImpl implements ViewGeneratorService {
 
     @Override
-    public void generateView(String viewName) {
-        String viewFileName = CaseConverter.toViewName(viewName);
+    public void generateView(String inputPath) {
+        String viewFileName = extractFileName(inputPath);
+        String subFolder    = extractSubPath(inputPath);
 
-        String templatePath = "templates/view.template";
+        String fullPath     = (subFolder.isEmpty() ? "" : subFolder + "/") + CaseConverter.toViewName(viewFileName) + ".html";
 
         Map<String, String> replacements = new HashMap<>();
         replacements.put("viewFileName", viewFileName);
 
-        String content = TemplateUtils.loadTemplate(templatePath, replacements);
-
-        if (content != null) {
-            String filePath = AppConstants.PROJECT_DIRECTORY + "/src/main/resources/templates/" + viewFileName + ".html";
-            File file = new File(filePath);
-
-            try {
-                file.getParentFile().mkdirs();
-                if (file.exists()) {
-                    ConsolePrinter.error("File already exists: " + filePath);
-                } else {
-                    try (FileWriter writer = new FileWriter(file)) {
-                        writer.write(content);
-                    }
-                    ConsolePrinter.println("View created at: " + filePath);
-                }
-            } catch (IOException e) {
-                ConsolePrinter.error("Error creating view: " + e.getMessage());
-            }
-        } else {
+        String content = TemplateUtils.loadTemplate("templates/view.template", replacements);
+        if (content == null) {
             ConsolePrinter.error("Error loading template or performing replacements.");
+            return;
+        }
+
+        File dir = new File(AppConstants.PROJECT_DIRECTORY + "/src/main/resources/templates", subFolder);
+        File file = new File(dir, CaseConverter.toViewName(viewFileName) + ".html");
+
+        writeToFile(file, content, "View");
+    }
+
+    private String extractFileName(String path) {
+        return path.substring(path.lastIndexOf("/") + 1);
+    }
+
+    private String extractSubPath(String path) {
+        int cut = path.lastIndexOf('/');
+        return cut == -1 ? "" : path.substring(0, cut);
+    }
+
+    private void writeToFile(File file, String content, String label) {
+        try {
+            File parentDir = file.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+
+            if (file.exists()) {
+                ConsolePrinter.error(label + " already exists at: " + file.getPath());
+                return;
+            }
+
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(content);
+            }
+
+            ConsolePrinter.println(label + " created at: " + file.getPath());
+
+        } catch (IOException e) {
+            ConsolePrinter.error("Error writing " + label.toLowerCase() + ": " + e.getMessage());
         }
     }
 }

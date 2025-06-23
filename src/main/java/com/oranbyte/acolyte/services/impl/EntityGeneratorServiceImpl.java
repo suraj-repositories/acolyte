@@ -15,41 +15,66 @@ import java.util.Map;
 public class EntityGeneratorServiceImpl implements EntityGeneratorService {
 
     @Override
-    public void generateEntity(String entityName, String basePackage) {
-        String className = CaseConverter.toPascalCase(entityName.replaceAll("[^a-zA-Z0-9_-]", ""));
+    public void generateEntity(String inputPath, String basePackage) {
+        String className = extractClassName(inputPath);
+        String subPackagePath = extractSubPath(inputPath);
+
         if (className.endsWith("Entity") && !className.equals("Entity")) {
             className = className.substring(0, className.lastIndexOf("Entity"));
         }
 
-        String entityPackage = basePackage + ".entity";
-        String packagePath = entityPackage.replace('.', '/');
+        String entityPackage = basePackage + ".entity" +
+                (subPackagePath.isEmpty() ? "" : "." + subPackagePath.replace("/", "."));
+
+        String packagePath = entityPackage.replace('.', '/').toLowerCase();
         String templatePath = "templates/entity.template";
 
         Map<String, String> replacements = new HashMap<>();
         replacements.put("packageName", entityPackage);
+        className = CaseConverter.ucFirst(className);
         replacements.put("className", className);
 
         String content = TemplateUtils.loadTemplate(templatePath, replacements);
-
-        if (content != null) {
-            String filePath = AppConstants.PROJECT_DIRECTORY + "/src/main/java/" + packagePath + "/" + className + ".java";
-            File file = new File(filePath);
-
-            try {
-                file.getParentFile().mkdirs();
-                if (file.exists()) {
-                    ConsolePrinter.error("File already exists: " + filePath);
-                } else {
-                    try (FileWriter writer = new FileWriter(file)) {
-                        writer.write(content);
-                    }
-                    ConsolePrinter.println("Entity created at: " + filePath);
-                }
-            } catch (IOException e) {
-                ConsolePrinter.error("Error creating entity: " + e.getMessage());
-            }
-        } else {
+        if (content == null) {
             ConsolePrinter.error("Error loading template or performing replacements.");
+            return;
+        }
+
+        File dir = new File(AppConstants.PROJECT_DIRECTORY + "/src/main/java", packagePath);
+        File file = new File(dir, className + ".java");
+
+        writeToFile(file, content, "Entity class");
+    }
+
+    private String extractClassName(String fullPath) {
+        return fullPath.substring(fullPath.lastIndexOf("/") + 1);
+    }
+
+    private String extractSubPath(String fullPath) {
+        int cut = fullPath.lastIndexOf('/');
+        return cut == -1 ? "" : fullPath.substring(0, cut);
+    }
+
+    private void writeToFile(File file, String content, String label) {
+        try {
+            File parentDir = file.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+
+            if (file.exists()) {
+                ConsolePrinter.error(label + " already exists at: " + file.getPath());
+                return;
+            }
+
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(content);
+            }
+
+            ConsolePrinter.println(label + " created at: " + file.getPath());
+
+        } catch (IOException e) {
+            ConsolePrinter.error("Error writing " + label.toLowerCase() + ": " + e.getMessage());
         }
     }
 }
