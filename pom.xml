@@ -15,6 +15,7 @@
         <junit.jupiter.version>5.10.0</junit.jupiter.version>
         <mockito.version>5.17.0</mockito.version>
         <picocli.version>4.7.7</picocli.version>
+        <mvn.invoker.version>3.2.0</mvn.invoker.version>
     </properties>
 
     <dependencies>
@@ -56,6 +57,22 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- To serve application using mvn -->
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-invoker</artifactId>
+            <version>${mvn.invoker.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.gradle/gradle-tooling-api -->
+        <dependency>
+            <groupId>org.gradle</groupId>
+            <artifactId>gradle-tooling-api</artifactId>
+            <version>7.3-20210825160000+0000</version>
+            <scope>runtime</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -126,7 +143,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-<!--                <version>3.5.1</version>-->
                 <executions>
                     <execution>
                         <phase>package</phase>

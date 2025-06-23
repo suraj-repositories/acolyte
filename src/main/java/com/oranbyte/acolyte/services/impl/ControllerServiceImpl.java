@@ -14,17 +14,38 @@ import java.util.*;
 public class ControllerServiceImpl implements ControllerService {
 
     public void generateController(String controllerName, String basePackage, List<String> resourceFunctions) {
-        String className = CaseConverter.toPascalCase(controllerName.replaceAll("[^a-zA-Z0-9_-]", ""));
+        String parentFolder = null;
+
+        if (controllerName.contains(".")) {
+            controllerName = controllerName.substring(0, controllerName.lastIndexOf(".java")).replaceAll("\\.", "/");
+        }
+
+        if (controllerName.contains("/")) {
+            parentFolder = controllerName.substring(0, controllerName.lastIndexOf("/")).toLowerCase();
+            controllerName = controllerName.substring(controllerName.lastIndexOf("/") + 1);
+        }
+
+        String className = CaseConverter.toClassName(controllerName);
         className = CaseConverter.appendIfNotAvailable(className, "Controller");
 
-
-        String controllerPackage = basePackage + ".controller";
-        String packagePath = controllerPackage.replace('.', '/');
+        String controllerPackage = basePackage + ".controller" + (parentFolder == null ? "" : "." + parentFolder);
+        String packagePath = controllerPackage.replaceAll("\\.", "/");
         String templatePath = "templates/controller.template";
 
         Map<String, String> replacements = new HashMap<>();
-        replacements.put("packageName", controllerPackage);
-        replacements.put("endpoint", className.toLowerCase().replace("controller", ""));
+        replacements.put("packageName", controllerPackage.replaceAll("/", "."));
+
+        String classNameLowerCase = ((Objects.isNull(parentFolder) ? "" : (parentFolder + "/")) + controllerName).toLowerCase();
+
+        String withoutJavaExtension = classNameLowerCase.replaceAll("\\.java$", "");
+
+        String baseName = withoutJavaExtension.endsWith("controller")
+                ? withoutJavaExtension.substring(0, withoutJavaExtension.lastIndexOf("controller"))
+                : withoutJavaExtension;
+
+        String endpointUrl = CaseConverter.toUrlString(baseName);
+        System.out.println(endpointUrl + " " + baseName +" "+ withoutJavaExtension +" "+  classNameLowerCase);
+        replacements.put("endpoint", endpointUrl);
         replacements.put("className", className);
 
         StringBuilder methodBuilder = new StringBuilder();
@@ -70,7 +91,7 @@ public class ControllerServiceImpl implements ControllerService {
                     try (FileWriter writer = new FileWriter(file)) {
                         writer.write(content);
                     }
-                    ConsolePrinter.println("Controller created at: " + filePath);
+                    ConsolePrinter.println("Controller created at: " + file.getAbsolutePath());
                 }
             } catch (IOException e) {
                 ConsolePrinter.error("Error creating controller: " + e.getMessage());

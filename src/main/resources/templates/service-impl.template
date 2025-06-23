@@ -1,8 +1,8 @@
-package {{packageName}}.impl;
+package {{packageImplName}};
 
 import {{packageName}}.{{interfaceName}};
 
 @Service
-public class {{interfaceName}}Impl implements {{interfaceName}}{
+public class {{interfaceNameImpl}} implements {{interfaceName}}{
 
 }

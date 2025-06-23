@@ -15,77 +15,85 @@ import java.util.Map;
 public class ServiceGenerationServiceImpl implements ServiceGenerationService {
 
     @Override
-    public void generateServiceInterface(String serviceName, String basePackage) {
-        String interfaceName = formatInterfaceName(serviceName);
-        String servicePackage = basePackage + ".service";
-        String packagePath = servicePackage.replace(".", "/");
+    public void generateServiceInterface(String inputPath, String basePackage) {
+        String serviceName = extractClassName(inputPath);
+        String subPath = extractSubPath(inputPath);
+
+        String packageName = basePackage + ".services" + (subPath.isEmpty() ? "" : "." + subPath.replace("/", "."));
+        String packageDir = packageName.replace(".", "/");
+        String interfaceName = CaseConverter.appendIfNotAvailable(CaseConverter.toPascalCase(serviceName), "Service");
 
         Map<String, String> replacements = new HashMap<>();
-        replacements.put("packageName", servicePackage);
+        replacements.put("packageName", packageName);
         replacements.put("interfaceName", interfaceName);
 
         String serviceContent = TemplateUtils.loadTemplate("templates/service.template", replacements);
-
         if (serviceContent == null) {
             ConsolePrinter.error("Error loading service interface template.");
             return;
         }
 
-        File serviceFile = new File(AppConstants.PROJECT_DIRECTORY + "/src/main/java/" + packagePath, interfaceName + ".java");
-
-        try {
-            serviceFile.getParentFile().mkdirs();
-            if (serviceFile.createNewFile()) {
-                try (FileWriter writer = new FileWriter(serviceFile)) {
-                    writer.write(serviceContent);
-                }
-                ConsolePrinter.println("Service interface created at: " + serviceFile.getPath());
-            } else {
-                ConsolePrinter.error("Service interface already exists at: " + serviceFile.getPath());
-            }
-        } catch (IOException e) {
-            ConsolePrinter.error("Error writing service interface: " + e.getMessage());
-        }
+        File dir = new File(AppConstants.PROJECT_DIRECTORY + "/src/main/java", packageDir);
+        File file = new File(dir, interfaceName + ".java");
+        writeToFile(file, serviceContent, "Service interface");
     }
 
     @Override
-    public void generateServiceImplementation(String serviceName, String basePackage) {
-        String interfaceName = formatInterfaceName(serviceName);
-        String servicePackage = basePackage + ".service";
-        String implPackage = servicePackage + ".impl";
-        String implPath = implPackage.replace(".", "/");
-        String className = interfaceName + "Impl";
+    public void generateServiceImplementation(String inputPath, String basePackage) {
+        String serviceName = extractClassName(inputPath);
+        String subPath = extractSubPath(inputPath);
+
+        String interfaceName = CaseConverter.appendIfNotAvailable(CaseConverter.toPascalCase(serviceName), "Service");
+        String implClassName = interfaceName + "Impl";
+
+        String implPackage = basePackage + ".services.impl" + (subPath.isEmpty() ? "" : "." + subPath.replace("/", "."));
+        String implPackageDir = implPackage.replace(".", "/");
 
         Map<String, String> replacements = new HashMap<>();
-        replacements.put("packageName", servicePackage);
+
+        String packageName = implPackage.replace(".impl", "");
+        replacements.put("packageName", packageName);
+        replacements.put("packageImplName", implPackage);
         replacements.put("interfaceName", interfaceName);
+        replacements.put("interfaceNameImpl", interfaceName + "Impl");
 
         String implContent = TemplateUtils.loadTemplate("templates/service-impl.template", replacements);
-
         if (implContent == null) {
             ConsolePrinter.error("Error loading service implementation template.");
             return;
         }
 
-        File implFile = new File(AppConstants.PROJECT_DIRECTORY + "/src/main/java/" + implPath, className + ".java");
+        File dir = new File(AppConstants.PROJECT_DIRECTORY + "/src/main/java", implPackageDir);
+        File file = new File(dir, implClassName + ".java");
 
-        try {
-            implFile.getParentFile().mkdirs();
-            if (implFile.createNewFile()) {
-                try (FileWriter writer = new FileWriter(implFile)) {
-                    writer.write(implContent);
-                }
-                ConsolePrinter.println("Service implementation created at: " + implFile.getPath());
-            } else {
-                ConsolePrinter.error("Service implementation already exists at: " + implFile.getPath());
-            }
-        } catch (IOException e) {
-            ConsolePrinter.error("Error writing service implementation: " + e.getMessage());
-        }
+        writeToFile(file, implContent, "Service implementation");
     }
 
-    private String formatInterfaceName(String rawName) {
-        String name = CaseConverter.toPascalCase(rawName.replaceAll("[^a-zA-Z0-9_-]", ""));
-        return CaseConverter.appendIfNotAvailable(name, "Service");
+    private String extractClassName(String fullPath) {
+        return fullPath.substring(fullPath.lastIndexOf("/") + 1);
+    }
+
+    private String extractSubPath(String fullPath) {
+        return fullPath.contains("/") ? fullPath.substring(0, fullPath.lastIndexOf("/")) : "";
+    }
+
+    private void writeToFile(File file, String content, String label) {
+        try {
+            File parentDir = file.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+
+            if (file.createNewFile()) {
+                try (FileWriter writer = new FileWriter(file)) {
+                    writer.write(content);
+                }
+                ConsolePrinter.println(label + " created at: " + file.getPath());
+            } else {
+                ConsolePrinter.error(label + " already exists at: " + file.getPath());
+            }
+        } catch (IOException e) {
+            ConsolePrinter.error("Error writing " + label.toLowerCase() + ": " + e.getMessage());
+        }
     }
 }

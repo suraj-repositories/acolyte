@@ -8,6 +8,15 @@ public class CaseConverter {
         return CaseConverter.toPascalCase(input.replaceAll("[^a-zA-Z0-9_-]", ""));
     }
 
+    public static String toUrlString(String input) {
+        if (input == null) return "";
+
+        return input
+                .replaceAll("[^a-zA-Z0-9._/-]", "")
+                .replaceAll("\\.", "/")
+                .toLowerCase();
+    }
+
     public static String toViewName(String input){
         if(input == null || input.isEmpty()) return input;
 

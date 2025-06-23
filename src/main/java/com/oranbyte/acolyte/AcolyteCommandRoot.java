@@ -16,6 +16,7 @@ import java.io.PrintWriter;
         name = "acolyte",
         mixinStandardHelpOptions = true,
         subcommands = {
+                ServeCommand.class,
                 MakeControllerCommand.class,
                 MakeServiceCommand.class,
                 MakeEntityCommand.class,
