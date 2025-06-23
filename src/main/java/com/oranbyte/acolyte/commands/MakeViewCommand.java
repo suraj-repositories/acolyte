@@ -5,7 +5,7 @@ import com.oranbyte.acolyte.services.ViewGeneratorService;
 import com.oranbyte.acolyte.services.impl.ViewGeneratorServiceImpl;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "make:view", description = "Create a simple view class")
+@CommandLine.Command(name = "make:view", description = "Create a simple view file")
 public class MakeViewCommand implements Runnable{
 
 
