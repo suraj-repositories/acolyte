@@ -2,21 +2,16 @@ package com.oranbyte.acolyte;
 
 import com.oranbyte.acolyte.commands.*;
 import com.oranbyte.acolyte.constants.AcolyteContext;
-import com.oranbyte.acolyte.constants.ConsoleColor;
 import com.oranbyte.acolyte.services.AcolyteRootService;
 import com.oranbyte.acolyte.services.impl.AcolyteRootServiceImpl;
-import com.oranbyte.acolyte.utils.ConsolePrinter;
 import com.oranbyte.acolyte.utils.ProjectMetadataUtil;
 import picocli.CommandLine;
-import picocli.CommandLine.Help.Ansi;
-
-import java.io.PrintWriter;
 
 @CommandLine.Command(
         name = "acolyte",
         mixinStandardHelpOptions = true,
         subcommands = {
-                ServeCommand.class,
+//                ServeCommand.class,
                 MakeControllerCommand.class,
                 MakeServiceCommand.class,
                 MakeEntityCommand.class,
@@ -26,6 +21,7 @@ import java.io.PrintWriter;
                 MakeRepositoryCommand.class,
                 MakeValidationCommand.class,
                 MakeListenerCommand.class,
+                MakeFragmentCommand.class
         }
 )
 public class AcolyteCommandRoot implements Runnable {

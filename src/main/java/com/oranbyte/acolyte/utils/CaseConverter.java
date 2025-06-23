@@ -68,6 +68,9 @@ public class CaseConverter {
         }
         return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
+    public static String toFragmentFunctionName(String input) {
+        return input.trim().replaceAll("[-\\s]", "_");
+    }
 
 
 }
