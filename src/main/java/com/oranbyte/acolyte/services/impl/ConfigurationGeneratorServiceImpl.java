@@ -15,12 +15,16 @@ import java.util.Map;
 public class ConfigurationGeneratorServiceImpl implements ConfigurationGeneratorService {
 
     @Override
-    public void generateConfiguration(String configName, String basePackage) {
-        String className = CaseConverter.appendIfNotAvailable(
-                CaseConverter.toClassName(configName)
-                , "Configuration");
+    public void generateConfiguration(String inputPath, String basePackage) {
+        String className = extractClassName(inputPath);
+        String subPath   = extractSubPath(inputPath);
 
-        String configPackage = basePackage + ".configuration";
+        className = CaseConverter.toClassName(className);
+        className = CaseConverter.appendIfNotAvailable(className, "Configuration");
+
+        String configPackage = (basePackage + ".configuration" +
+                (subPath.isEmpty() ? "" : "." + subPath.replace("/", "."))).toLowerCase();
+
         String packagePath = configPackage.replace('.', '/');
         String templatePath = "templates/configuration.template";
 
@@ -29,28 +33,46 @@ public class ConfigurationGeneratorServiceImpl implements ConfigurationGenerator
         replacements.put("className", className);
 
         String content = TemplateUtils.loadTemplate(templatePath, replacements);
+        if (content == null) {
+            ConsolePrinter.error("Error loading template or performing replacements.");
+            return;
+        }
 
-        if (content != null) {
-            String filePath = AppConstants.PROJECT_DIRECTORY + "/src/main/java/" + packagePath + "/" + className + ".java";
-            File file = new File(filePath);
+        File dir = new File(AppConstants.PROJECT_DIRECTORY + "/src/main/java", packagePath);
+        File file = new File(dir, className + ".java");
 
-            try {
-                file.getParentFile().mkdirs();
+        writeToFile(file, content, "Configuration");
+    }
 
-                if (file.exists()) {
-                    ConsolePrinter.error("File already exists: " + filePath);
-                } else {
-                    try (FileWriter writer = new FileWriter(file)) {
-                        writer.write(content);
-                    }
-                    ConsolePrinter.println("Configuration created at: " + filePath);
-                }
-            } catch (IOException e) {
-                ConsolePrinter.error("Error creating configuration: " + e.getMessage());
+    private String extractClassName(String fullPath) {
+        return fullPath.substring(fullPath.lastIndexOf("/") + 1);
+    }
+
+    private String extractSubPath(String fullPath) {
+        int cut = fullPath.lastIndexOf('/');
+        return cut == -1 ? "" : fullPath.substring(0, cut);
+    }
+
+    private void writeToFile(File file, String content, String label) {
+        try {
+            File parentDir = file.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs();
             }
 
-        } else {
-            ConsolePrinter.error("Error loading template or performing replacements.");
+            if (file.exists()) {
+                ConsolePrinter.error(label + " already exists at: " + file.getPath());
+                return;
+            }
+
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(content);
+            }
+
+            ConsolePrinter.println(label + " created at: " + file.getPath());
+
+        } catch (IOException e) {
+            ConsolePrinter.error("Error writing " + label.toLowerCase() + ": " + e.getMessage());
         }
     }
 }

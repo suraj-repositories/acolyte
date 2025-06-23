@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import {{entityPackage}}.{{className}};
 
 @Repository
-public interface {{className}}Repository extends JpaRepository<{{className}}, {{idType}}> {
+public interface {{repositoryClassName}} extends JpaRepository<{{className}}, {{idType}}> {
 }

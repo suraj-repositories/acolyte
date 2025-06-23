@@ -59,9 +59,9 @@ acolyte make:service UserSerivce
 ```
 #### Make Repository
 ```shell
-acolyte make:repository <repository-name>
+acolyte make:repository <entity-name>
 // OR
-acolyte make:repo <repository-name>
+acolyte make:repo <entity-name>
 ```
 ```shell
 acolyte make:repo UserRepository
